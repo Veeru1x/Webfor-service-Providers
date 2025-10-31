@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { color: #667eea; margin-bottom: 1.5rem; text-align: center; }
+        .input-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover { background: #5568d3; }
+        .todo-list { list-style: none; }
+        .todo-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .todo-item:hover { background: #e9ecef; }
+        .todo-item.completed { opacity: 0.6; text-decoration: line-through; }
+        .todo-text { flex: 1; cursor: pointer; }
+        .delete-btn {
+            background: #dc3545;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        .delete-btn:hover { background: #c82333; }
+        .back-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            background: #764ba2;
+        }
+        .back-btn:hover { background: #653a8a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Todo List</h1>
+        <div class="input-box">
+            <input type="text" id="todoInput" placeholder="Add a new task...">
+            <button onclick="addTodo()">Add</button>
+        </div>
+        <ul class="todo-list" id="todoList"></ul>
+        <button class="back-btn" onclick="window.location.href='../Projects.html'">Back to Projects</button>
+    </div>
+
+    <script>
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+        function renderTodos() {
+            const list = document.getElementById('todoList');
+            list.innerHTML = '';
+            todos.forEach((todo, index) => {
+                const li = document.createElement('li');
+                li.className = 'todo-item' + (todo.completed ? ' completed' : '');
+                li.innerHTML = `
+                    <span class="todo-text" onclick="toggleTodo(${index})">${todo.text}</span>
+                    <button class="delete-btn" onclick="deleteTodo(${index})">Delete</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            if (input.value.trim()) {
+                todos.push({ text: input.value, completed: false });
+                localStorage.setItem('todos', JSON.stringify(todos));
+                input.value = '';
+                renderTodos();
+            }
+        }
+
+        function toggleTodo(index) {
+            todos[index].completed = !todos[index].completed;
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+
+        function deleteTodo(index) {
+            todos.splice(index, 1);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+
+        document.getElementById('todoInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+
+        renderTodos();
+    </script>
+</body>
+</html>

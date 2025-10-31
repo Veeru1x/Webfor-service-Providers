@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        h1 { color: #667eea; margin-bottom: 2rem; }
+        .clock {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #333;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        .date {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .time-parts {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .time-part {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+        }
+        .time-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .time-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .back-btn {
+            margin-top: 2rem;
+            padding: 12px 24px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .back-btn:hover { background: #653a8a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕐 Digital Clock</h1>
+        <div class="clock" id="clock"></div>
+        <div class="date" id="date"></div>
+        <div class="time-parts">
+            <div class="time-part">
+                <div class="time-label">Hours</div>
+                <div class="time-value" id="hours"></div>
+            </div>
+            <div class="time-part">
+                <div class="time-label">Minutes</div>
+                <div class="time-value" id="minutes"></div>
+            </div>
+            <div class="time-part">
+                <div class="time-label">Seconds</div>
+                <div class="time-value" id="seconds"></div>
+            </div>
+        </div>
+        <button class="back-btn" onclick="window.location.href='../Projects.html'">Back to Projects</button>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>

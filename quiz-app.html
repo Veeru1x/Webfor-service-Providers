@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 { color: #667eea; margin-bottom: 1.5rem; text-align: center; }
+        .quiz-box { display: block; }
+        .quiz-box.hidden { display: none; }
+        .question {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .option:hover { background: #e9ecef; }
+        .option.correct { background: #d4edda; border-color: #28a745; }
+        .option.wrong { background: #f8d7da; border-color: #dc3545; }
+        .next-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .next-btn:hover { background: #5568d3; }
+        .result {
+            text-align: center;
+            display: none;
+        }
+        .result.active { display: block; }
+        .score {
+            font-size: 3rem;
+            color: #667eea;
+            margin: 2rem 0;
+        }
+        .back-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 12px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .back-btn:hover { background: #653a8a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Quiz App</h1>
+        <div class="quiz-box" id="quizBox">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+        </div>
+        <div class="result" id="result">
+            <h2>Quiz Completed!</h2>
+            <div class="score" id="score"></div>
+            <button class="next-btn" onclick="restartQuiz()">Restart Quiz</button>
+        </div>
+        <button class="back-btn" onclick="window.location.href='../Projects.html'">Back to Projects</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What does HTML stand for?",
+                options: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"],
+                correct: 0
+            },
+            {
+                question: "Which language is used for styling web pages?",
+                options: ["HTML", "JavaScript", "CSS", "Python"],
+                correct: 2
+            },
+            {
+                question: "What does CSS stand for?",
+                options: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+                correct: 1
+            },
+            {
+                question: "Which is a JavaScript framework?",
+                options: ["Django", "Laravel", "React", "Flask"],
+                correct: 2
+            },
+            {
+                question: "What is the correct syntax for referring to an external script?",
+                options: ["<script src='app.js'>", "<script href='app.js'>", "<script name='app.js'>", "<script file='app.js'>"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question').textContent = `Question ${currentQuestion + 1}: ${q.question}`;
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            q.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = option;
+                div.onclick = () => selectOption(index);
+                optionsDiv.appendChild(div);
+            });
+            answered = false;
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+            answered = true;
+            const options = document.querySelectorAll('.option');
+            const correct = questions[currentQuestion].correct;
+            
+            if (index === correct) {
+                options[index].classList.add('correct');
+                score++;
+            } else {
+                options[index].classList.add('wrong');
+                options[correct].classList.add('correct');
+            }
+        }
+
+        function nextQuestion() {
+            if (!answered) return alert('Please select an answer!');
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizBox').classList.add('hidden');
+            document.getElementById('result').classList.add('active');
+            document.getElementById('score').textContent = `${score} / ${questions.length}`;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('quizBox').classList.remove('hidden');
+            document.getElementById('result').classList.remove('active');
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
